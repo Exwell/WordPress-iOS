@@ -301,6 +301,17 @@ NSString * const OptionsKeyIsWPForTeams = @"is_wpforteams_site";
     return [self postFormatTextFromSlug:self.settings.defaultPostFormat];
 }
 
+- (BOOL)hasMappedDomain {
+    if (![self isHostedAtWPcom]) {
+        return NO;
+    }
+
+    NSURL *unmappedURL = [NSURL URLWithString:[self getOptionValue:@"unmapped_url"]];
+    NSURL *homeURL = [NSURL URLWithString:[self homeURL]];
+
+    return ![[unmappedURL host] isEqualToString:[homeURL host]];
+}
+
 - (BOOL)hasIcon
 {
     // A blog without an icon has the blog url in icon, so we can't directly check its
@@ -590,7 +601,7 @@ NSString * const OptionsKeyIsWPForTeams = @"is_wpforteams_site";
 
 - (BOOL)supportsStories
 {
-    BOOL hasRequiredJetpack = [self hasRequiredJetpackVersion:@"8.9"];
+    BOOL hasRequiredJetpack = [self hasRequiredJetpackVersion:@"9.1"];
     return hasRequiredJetpack || self.isHostedAtWPcom;
 }
 
